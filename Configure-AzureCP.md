@@ -1,11 +1,74 @@
-## Proxy configuration
+## Configure AzureCP
 
-AzureCP makes HTTP requests to Azure under the process of the site (for people picker requests) and the SharePoint STS (for augmentation), but there are also requests made by lsass.exe to validate CRL and certificate chain of certificates returned by Azure.<br>
-If SharePoint servers need to connect through a HTTP proxy, additional configuration is required to configure it:
+AzureCP needs to be registered as an application in Azure Active Directory, [this page](Create-App-In-AAD.html) explains how to do this.
 
-### For AzureCP to be able to connect to Azure
+### Configure with administration pages
 
-Add the following [proxy configuration](https://msdn.microsoft.com/en-us/library/kd3cf2ex.aspx) in the web.config of:
+AzureCP comes with 2 pages, provisioned in central administration > Security:
+
+- Global configuration: Register Azure AD tenants and configure general settings
+- Claim types configuration: Define the claim types, and their mapping with users and groups
+
+### Configure with PowerShell
+
+Starting with v12, AzureCP can be configured with PowerShell:
+
+```powershell
+Add-Type -AssemblyName "AzureCP, Version=1.0.0.0, Culture=neutral, PublicKeyToken=65dc6b5903b51636"
+$config = [azurecp.AzureCPConfig]::GetConfiguration("AzureCPConfig")
+
+# To view current configuration
+$config
+$config.ClaimTypes
+
+# Update some settings, e.g. enable augmentation:
+$config.EnableAugmentation = $true
+$config.Update()
+
+# Reset claim types configuration list to default
+$config.ResetClaimTypesList()
+$config.Update()
+
+# Reset the whole configuration to default
+$config.ResetCurrentConfiguration()
+$config.Update()
+
+# Add a new Azure AD tenant
+$newAADTenant = New-Object azurecp.AzureTenant
+$newAADTenant.TenantName = "xxx.onMicrosoft.com"
+$newAADTenant.ClientId = "Application ID"
+$newAADTenant.ClientSecret = "XXX"
+$config.AzureTenants.Add($newAADTenant)
+$config.Update()
+
+# Add a new entry to the claim types configuration list
+$newCTConfig = New-Object azurecp.ClaimTypeConfig
+$newCTConfig.ClaimType = "ClaimTypeValue"
+$newCTConfig.EntityType = [azurecp.DirectoryObjectType]::Group
+$newCTConfig.DirectoryObjectProperty = [azurecp.AzureADObjectProperty]::Department
+$claimTypes.Add($newCTConfig)
+$config.Update()
+
+# Remove a claim type from the claim types configuration list
+$claimTypes.Remove("ClaimTypeValue")
+$config.Update()
+```
+
+AzureCP configuration is stored in SharePoint configuration database, in persisted object "AzureCPConfig", that can be displayed with this SQL command:
+
+```sql
+SELECT Id, Name, cast (properties as xml) AS XMLProps FROM Objects WHERE Name = 'AzureCPConfig'
+```
+
+## Configure proxy for internet access
+
+AzureCP makes HTTP requests to access Azure AD, and may run in all SharePoint processes (w3wp of the site, STS, central administration, and also in owstimer.exe).  
+Besides this, connection is secured so Windows will validate the certificate chain returned by Azure.  
+If SharePoint servers connect to internet through a proxy, additional configuration is required.
+
+### To allow AzureCP to connect to Azure
+
+If needed, add the [proxy configuration](https://msdn.microsoft.com/en-us/library/kd3cf2ex.aspx) in the web.config of:
 
 - SharePoint sites that use AzureCP
 - SharePoine central administration site
@@ -21,30 +84,19 @@ Add the following [proxy configuration](https://msdn.microsoft.com/en-us/library
 </system.net>
 ```
 
-### For certificate validation (CRL) to succeed
+### To allow certificate chain validation
 
-Certificate validation is performed by lsass.exe
+If Windows cannot validate certificates, the usual symptom is a hang during 1 minute upon sign-in, and errors are recorded in CAPI2 event log.  
+Certificate validation is performed by lsass.exe, which uses the proxy configured with netsh:
 
-- Display proxy configuration with this command:
+- Display proxy configuration:
 
-```Text
+```text
 netsh winhttp show proxy
 ```
 
-- Set proxy configuration with this command:<br>
+- Set proxy:
 
+```text
 netsh winhttp set proxy proxy-server="http=myproxy;https=sproxy:88" bypass-list="*.foo.com"
-
-
-## Claims supported
-
-Azure AD binds property UserPrincipalName (which identifies the user) to claim type "_http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name_". Unfortunately this claim type is reserved by SharePoint and cannot be used.
-
-So the STS (whatever it is ACS, ADFS or another one) must transform this claim type into another one.  
-AzureCP assumes it will be either "_http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress_" or "_http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn_" (you should define only 1 in the SPTrust), so both are binded to property **UserPrincipalName**.  
-Properties **DisplayName, GivenName, Surname** are also used to query users, and **Mail, Mobile, JobTitle** are used as metadata for the permission created.  
-For groups, property **DisplayName** is linked to _http://schemas.microsoft.com/ws/2008/06/identity/claims/role_  
-
-AzureCP can augment Azure AD users with their group membership. This is configurable and enabled by default. Groups are stored in claim type "_http://schemas.microsoft.com/ws/2008/06/identity/claims/role_", but this can be changed. However there can be only 1 claim type used for the roles, otherwise augmentation will be disabled.
-
-**All of this can be configured** in AzureCP pages added in central administration > security.
+```
