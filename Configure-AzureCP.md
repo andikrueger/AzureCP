@@ -44,13 +44,13 @@ $config.Update()
 # Add a new entry to the claim types configuration list
 $newCTConfig = New-Object azurecp.ClaimTypeConfig
 $newCTConfig.ClaimType = "ClaimTypeValue"
-$newCTConfig.EntityType = [azurecp.DirectoryObjectType]::Group
+$newCTConfig.EntityType = [azurecp.DirectoryObjectType]::User
 $newCTConfig.DirectoryObjectProperty = [azurecp.AzureADObjectProperty]::Department
 $claimTypes.Add($newCTConfig)
 $config.Update()
 
 # Remove a claim type from the claim types configuration list
-$claimTypes.Remove("ClaimTypeValue")
+$config.ClaimTypes.Remove("ClaimTypeValue")
 $config.Update()
 ```
 
