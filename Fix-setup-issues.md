@@ -24,7 +24,7 @@ Usually, only AzureCP farm feature is listed:
 
 ```text
 DisplayName   : AzureCP
-Scope         :
+Scope         : Farm
 Id            : d1817470-ca9f-4b0c-83c5-ea61f9b0660d
 RootDirectory : C:\Program Files\Common Files\Microsoft Shared\Web Server Extensions\16\Template\Features\AzureCP
 ```
