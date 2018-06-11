@@ -20,6 +20,8 @@ $trust.ClaimProviderName = "AzureCP"
 $trust.Update()
 ```
 
+- [Read this page](Configure-AzureCP.html) to configure AzureCP for your environment.
+
 ## Important
 
 - Due to limitations of SharePoint API, do not associate AzureCP with more than 1 SPTrustedIdentityTokenIssuer. Developers can [bypass this limitation](For-Developers.html).
