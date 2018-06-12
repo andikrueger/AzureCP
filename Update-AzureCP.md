@@ -16,6 +16,7 @@ Update-SPSolution -GACDeployment -Identity "AzureCP.wsp" -LiteralPath "F:\Data\D
 ```
 
 - Restart IIS service on each SharePoint server
+- Visit central administration > Security > LDAPCP global configuration page: Check version and review configuration
 
 ## Updating from a version earlier than v12
 
@@ -37,7 +38,7 @@ $newlogin = "c:0-.t|contoso.local|a5e76528-a305-4345-8481-af345ea56032";
 [Microsoft.SharePoint.Administration.SPFarm]::Local.MigrateGroup($oldlogin, $newlogin);
 ```
 
-> **Important:** This operation is farm wide and must be tested carefully before applying it in production environment.
+> **Important:** This operation is farm wide and must be tested carefully before applying it in production environments.
 
 Alternatively, administrators can configure AzureCP to use the property DisplayName for the groups, instead of the Id:
 

@@ -12,7 +12,7 @@ Common mistakes to avoid:
 
 - To avoid confusion, consider to completely uninstall standard AzureCP.wsp solution before you deploy your sample.
 - **Always deactivate the farm feature adding the claims provider before retracting the solution**. [Check this page](Remove-AzureCP.html) for more information.
-- If you create your own SharePoint solution, **DO NOT forget to include the azurecp.dll assembly in the wsp package**.
+- If you create your own SharePoint solution, **DO NOT forget to include the azurecp.dll and all other NuGet package assemblies in the wsp solution**.
 
 If something goes wrong during solution deployment, [check this page](Fix-setup-issues.html) to resolve problems.  
 In any case, do not directly edit AzureCP class, it has been designed to be inherited so that you can customize it to fit your needs. If a scenario that you need is not covered, please submit it in the discussions tab.
