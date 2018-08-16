@@ -33,5 +33,14 @@ You can extract azurecp.dll from AzureCP.wsp using [7-zip](https://www.7-zip.org
 ```powershell
 [System.Reflection.Assembly]::Load("System.EnterpriseServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
 $publish = New-Object System.EnterpriseServices.Internal.Publish
+
+try
+{
+    # Method Publish.GacRemove() removes the assembly from the GAC if it exists (for update scenarios)
+    $existingAssembly = [System.Reflection.Assembly]::Load("AzureCP, Version=1.0.0.0, Culture=neutral, PublicKeyToken=65dc6b5903b51636").Location
+    $publish.GacRemove($existingAssembly)
+} catch {}
+
+# Adds assembly to the GAC
 $publish.GacInstall("F:\Data\Dev\azurecp.dll")
 ```
