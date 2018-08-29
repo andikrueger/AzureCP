@@ -18,14 +18,21 @@ Update-SPSolution -GACDeployment -Identity "AzureCP.wsp" -LiteralPath "F:\Data\D
 - Restart IIS service and SharePoint timer service on each SharePoint server
 - Visit central administration > Security > LDAPCP global configuration page: Check version and review configuration
 
-## Updating from a version earlier than v12
+## Breaking changes with previous versions
 
-Version 12 is a major update that has breaking changes. If you update from an earlier version:
+Some versions have breaking changes that require to reset some settings to their default values during the upgrade:
 
-- Claim type configuration list will be reset and all customization made to that list will be lost.
-- Starting with v12, AzureCP creates group entities (permissions) using the Id of the groups rather than their DisplayName. There are 2 reasons for this change:
-  - Group Id is unique, DisplayName is not
-  - With group Id, AzureCP can get nested groups during augmentation, which is not possible with the DisplayName
+- Upgrade to v12:
+  - Claim type configuration list will be reset. This is due to the complete rewriting of this list.
+  - Groups permissions are now created using the Id instead of the DisplayName. See below for more information.
+- Upgrade to v13: Claim type configuration list will be reset. This is due to the changes made to handle Guest users.
+
+## Group identifier changes
+
+Starting with v12, AzureCP creates group entities (permissions) using the Id instead of the DisplayName. There are 2 reasons for this change:
+
+- Group Id is unique, DisplayName is not
+- With group Id, AzureCP can get nested group membership of users during augmentation, which is not possible with the DisplayName
 
 As a consequence of this change, permissions granted to Azure AD groups before v12 will stop working, because the group value in the SAML token of AAD users (set with the Id) won't match the group value of group permission in the sites (set with the DisplayName).
 
@@ -38,7 +45,7 @@ $newlogin = "c:0-.t|contoso.local|a5e76528-a305-4345-8481-af345ea56032";
 [Microsoft.SharePoint.Administration.SPFarm]::Local.MigrateGroup($oldlogin, $newlogin);
 ```
 
-> **Important:** This operation is farm wide and must be tested carefully before applying it in production environments.
+> **Important:** This operation is farm wide and must be tested carefully before it is applied in production environments.
 
 Alternatively, administrators can configure AzureCP to use the property DisplayName for the groups, instead of the Id:
 
