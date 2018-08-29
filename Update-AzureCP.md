@@ -15,6 +15,7 @@ Run this cmdlet on the server running central administration:
 Update-SPSolution -GACDeployment -Identity "AzureCP.wsp" -LiteralPath "F:\Data\Dev\AzureCP.wsp"
 ```
 
+- Wait 1 minute
 - Restart IIS service on each SharePoint server
 - Visit central administration > Security > LDAPCP global configuration page: Check version and review configuration
 
