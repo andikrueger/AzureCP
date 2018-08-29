@@ -20,7 +20,7 @@ Update-SPSolution -GACDeployment -Identity "AzureCP.wsp" -LiteralPath "F:\Data\D
 
 ## Breaking changes with previous versions
 
-Some versions have breaking changes that require to reset some settings to their default values during the upgrade:
+Some versions have breaking changes and some settings will be reset to their default values during the upgrade:
 
 - Upgrade to v12:
   - Claim type configuration list will be reset. This is due to the complete rewriting of this list.
