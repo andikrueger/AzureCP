@@ -6,9 +6,7 @@
 > If some SharePoint servers do not run SharePoint service "Microsoft SharePoint Foundation Web Application", azurecp.dll must be manually updated in their GAC as [documented here](Install-AzureCP.html).  
 > If something goes wrong, [check this page](Fix-setup-issues.html) to fix issues.
 
-- Update solution
-
-Run this cmdlet on the server running central administration:
+- Run Update-SPSolution on the server running central administration:
 
 ```powershell
 # This will start a timer job that will deploy the update on SharePoint servers. Central administration will restart during the process
