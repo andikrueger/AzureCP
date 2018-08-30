@@ -13,8 +13,8 @@ docs:
 - title: Configure
   url: Configure-AzureCP.html
 
-- title: Create app in Azure AD
-  url: Create-App-In-AAD.html
+- title: Register application in AAD
+  url: Register-App-In-AAD.html
 
 - title: For developers
   url: For-Developers.html

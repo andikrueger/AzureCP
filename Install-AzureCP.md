@@ -20,7 +20,8 @@ $trust.ClaimProviderName = "AzureCP"
 $trust.Update()
 ```
 
-- [Read this page](Configure-AzureCP.html) to configure AzureCP for your environment.
+- [Add an application](Register-App-In-AAD.html) in Azure AD to allow AzureCP to query your tenant.
+- [Configure](Configure-AzureCP.html) AzureCP for your environment.
 
 ## Important
 

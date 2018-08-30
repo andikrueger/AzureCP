@@ -1,15 +1,11 @@
-## Configure AzureCP
-
-AzureCP needs to be registered as an application in Azure Active Directory, [this page](Create-App-In-AAD.html) explains how to do this.
-
-### Configure with administration pages
+## Configure AzureCP with administration pages
 
 AzureCP comes with 2 pages, provisioned in central administration > Security:
 
-- Global configuration: Register Azure AD tenants and configure general settings
-- Claim types configuration: Define the claim types, and their mapping with users and groups
+- Global configuration: Register Azure AD tenant(s) and configure general settings
+- Claim types configuration: Define claim types and their mapping with users / groups properties
 
-### Configure with PowerShell
+## Configure AzureCP with PowerShell
 
 Starting with v12, AzureCP can be configured with PowerShell:
 

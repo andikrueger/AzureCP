@@ -1,8 +1,6 @@
-## Create the app in Azure Active Directory
+## Register an application in Azure Active Directory
 
-AzureCP must be registered as an application in Azure AD to be able to connect and make queries. It only requires permission "Read directory data" and must not have any delegated permission.
-
-To register the application in Azure Active Directory:
+An application must be registered in Azure AD to allow AzureCP to make queries in your tenant:
 
 - Sign-in to the [Azure portal](https://portal.azure.com/) and browse to your Azure Active Directory tenant
 - Go to "App Registrations" > "New application registration" > Add following information:
