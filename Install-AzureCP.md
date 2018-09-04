@@ -20,7 +20,9 @@ $trust.ClaimProviderName = "AzureCP"
 $trust.Update()
 ```
 
-- [Add an application](Register-App-In-AAD.html) in Azure AD to allow AzureCP to query your tenant.
+- Visit central administration > System Settings > Manage farm solutions: Wait until solution status shows "Deployed".
+- Restart IIS service and SharePoint timer service on each SharePoint server.
+- [Add an application](Register-App-In-AAD.html) in your Azure AD tenant to allow AzureCP to query it.
 - [Configure](Configure-AzureCP.html) AzureCP for your environment.
 
 ## Important
