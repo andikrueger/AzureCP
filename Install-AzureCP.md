@@ -21,6 +21,7 @@ $trust.Update()
 ```
 
 - Visit central administration > System Settings > Manage farm solutions: Wait until solution status shows "Deployed".
+- Update assembly manually on SharePoint servers that do not run the service "Microsoft SharePoint Foundation Web Application" (see below for more details).
 - Restart IIS service and SharePoint timer service on each SharePoint server.
 - [Add an application](Register-App-In-AAD.html) in your Azure AD tenant to allow AzureCP to query it.
 - [Configure](Configure-AzureCP.html) AzureCP for your environment.
