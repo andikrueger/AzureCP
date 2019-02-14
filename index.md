@@ -1,11 +1,11 @@
-This claims provider uses [Microsoft Graph](https://developer.microsoft.com/en-us/graph/) to connect SharePoint 2019 / 2016 / 2013 with Azure Active Directory and provide a great search experience in the people picker.  
+This claims provider uses [Microsoft Graph](https://developer.microsoft.com/en-us/graph/) to connect SharePoint 2019 / 2016 / 2013 with Azure Active Directory to enhance people picker with a great search experience.  
 ![People picker with AzureCP](https://github.com/Yvand/AzureCP/raw/gh-pages/assets/people%20picker%20AzureCP_2.png)
 
 [This article](https://docs.microsoft.com/en-us/office365/enterprise/using-azure-ad-for-sharepoint-server-authentication) explains how to federate SharePoint with Azure AD.
 
 ## Features
 
-- Query Azure AD to get users and groups based on the user input.
+- Query Azure AD users and groups based on the user input.
 - Easy to configure through central administration or using PowerShell.
 - Get group membership of Azure AD users.
 - Connect to multiple Azure AD tenants in parallel (multi-threaded queries).
