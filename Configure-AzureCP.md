@@ -59,22 +59,21 @@ SELECT Id, Name, cast (properties as xml) AS XMLProps FROM Objects WHERE Name = 
 ## Configure proxy for internet access
 
 AzureCP makes HTTP requests to access Azure AD, and may run in all SharePoint processes (w3wp of the site, STS, central administration, and also in owstimer.exe).  
-Besides this, connection is secured so Windows will validate the certificate chain returned by Azure.  
 If SharePoint servers connect to internet through a proxy, additional configuration is required.
 
 ### To allow AzureCP to connect to Azure
 
-If needed, add the [proxy configuration](https://msdn.microsoft.com/en-us/library/kd3cf2ex.aspx) in the web.config of:
+If needed, add the [proxy configuration](https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/file-schema/network/defaultproxy-element-network-settings) in the web.config of:
 
-- SharePoint sites that use AzureCP
-- SharePoine central administration site
-- SharePoint STS located in 15\WebServices\SecurityToken
-- SharePoint Web Services root site
-- Also create file owstimer.exe.config in 15\BIN of each SharePoint server to put proxy configuration
+* SharePoint sites that use AzureCP
+* SharePoine central administration site
+* SharePoint STS located in 15\WebServices\SecurityToken
+* SharePoint Web Services root site
+* Also create file owstimer.exe.config in 15\BIN of each SharePoint server to put proxy configuration
 
 ```xml
 <system.net>
-    <defaultProxy>
+    <defaultProxy useDefaultCredentials="true">
         <proxy proxyaddress="http://proxy.contoso.com:3128" bypassonlocal="true" />
     </defaultProxy>
 </system.net>
@@ -82,17 +81,15 @@ If needed, add the [proxy configuration](https://msdn.microsoft.com/en-us/librar
 
 ### To allow certificate chain validation
 
-If Windows cannot validate certificates, the usual symptom is a hang during 1 minute upon sign-in, and errors are recorded in CAPI2 event log.  
-Certificate validation is performed by lsass.exe, which uses the proxy configured with netsh:
-
-- Display proxy configuration:
+Connection to Azure AD is secured, and Windows validates all certificates in the chain.  
+If Windows cannot validate them, the usual symptom is a hang during 1 minute upon sign-in, and errors are recorded in CAPI2 event log.  
+Certificate validation is performed by lsass.exe, which uses the proxy configuration set with netsh.exe:
 
 ```text
+# To see proxy configuration
 netsh winhttp show proxy
-```
-
-- Set proxy:
-
-```text
+# To see proxy configuration
 netsh winhttp set proxy proxy-server="http=myproxy;https=sproxy:88" bypass-list="*.foo.com"
+# To remove proxy configuration
+netsh winhttp reset proxy
 ```
