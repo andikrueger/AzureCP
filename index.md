@@ -1,4 +1,4 @@
-This claims provider uses [Microsoft Graph](https://developer.microsoft.com/en-us/graph/) to connect SharePoint 2019 / 2016 / 2013 with Azure Active Directory to enhance people picker with a great search experience.  
+This claims provider uses [Microsoft Graph](https://developer.microsoft.com/en-us/graph/) to connect SharePoint 2019 / 2016 / 2013 with Azure Active Directory and enhance people picker with a great search experience.  
 ![People picker with AzureCP](https://github.com/Yvand/AzureCP/raw/gh-pages/assets/people%20picker%20AzureCP_2.png)
 
 [This article](https://docs.microsoft.com/en-us/office365/enterprise/using-azure-ad-for-sharepoint-server-authentication) explains how to federate SharePoint with Azure AD.
