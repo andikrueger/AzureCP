@@ -3,16 +3,14 @@
 An application must be registered in Azure AD to allow AzureCP to make queries in your tenant:
 
 - Sign-in to the [Azure portal](https://portal.azure.com/) and browse to your Azure Active Directory tenant
-- Go to "App Registrations" > "New application registration" > Add following information:
+- Go to "App Registrations" > "New registration" > Type the following information:
     > Name: e.g. AzureCP  
-    > Application type: "Web app / API"  
-    > Sign-out URL: e.g. http://fake
-- Click Create
-- Click on the app created
-    > **Note:** Copy the "Application ID" to use it in new tenant form in AzureCP.
-- Click on "Required permissions" > Click on "Windows Azure Active Directory": Make sure **only** "Read directory data" permission under "Application permissions" is selected > Save
-- Click "Grant Permissions" > Yes
-- Click on Keys: In "Password" section type a key description (e.g. "AzureCP for SP"), choose a Duration and Save.
-    > **Note:** "Password" corresponds to the "Application Secret" in new tenant form in AzureCP.
-
-> **Note:** If you did a mistake in permissions configuration and fix it afterwards, it may take some time before this is actually applied. Feel free to go for a coffee break before testing connection again.
+    > Supported account types: "Accounts in this organizational directory only (TenantName)"
+- Click on "Register"
+    > **Note:** Copy the "Application (client) ID": it is required by AzureCP to add a tenant.
+- Click on "API permissions" and remove the permission added by default.
+- Click on "Add a permission" > Select "Microsoft Graph" > "Application permissions" > Directory > Directory.Read.All > click "Add permissions"
+- Click on "Grant admin consent for <TenantName>" > Yes
+    > **Note:** "After this operation, you should have only the Microsoft Graph > Directory.Read.All permission, of type "Application", with admin consent granted.
+- Click on "Certificates & secrets" > "New client secret": Type a description, choose a duration and validate.
+    > **Note:** Copy the client secret value: it is required by AzureCP to add a tenant.
