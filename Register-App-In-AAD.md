@@ -10,7 +10,7 @@ An application must be registered in Azure AD to allow AzureCP to make queries i
     > **Note:** Copy the "Application (client) ID": it is required by AzureCP to add a tenant.
 - Click on "API permissions" and remove the permission added by default.
 - Click on "Add a permission" > Select "Microsoft Graph" > "Application permissions" > Directory > Directory.Read.All > click "Add permissions"
-- Click on "Grant admin consent for <TenantName>" > Yes
+- Click on "Grant admin consent for TenantName" > Yes
     > **Note:** "After this operation, you should have only the Microsoft Graph > Directory.Read.All permission, of type "Application", with admin consent granted.
 - Click on "Certificates & secrets" > "New client secret": Type a description, choose a duration and validate.
     > **Note:** Copy the client secret value: it is required by AzureCP to add a tenant.
