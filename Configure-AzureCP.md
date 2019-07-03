@@ -31,9 +31,9 @@ $config.Update()
 
 # Add a new Azure AD tenant
 $newAADTenant = New-Object azurecp.AzureTenant
-$newAADTenant.TenantName = "xxx.onMicrosoft.com"
-$newAADTenant.ClientId = "Application ID"
-$newAADTenant.ClientSecret = "XXX"
+$newAADTenant.Name = "xxx.onMicrosoft.com"
+$newAADTenant.ApplicationId = "Application ID"
+$newAADTenant.ApplicationSecret = "XXX"
 $config.AzureTenants.Add($newAADTenant)
 $config.Update()
 
@@ -42,7 +42,7 @@ $newCTConfig = New-Object azurecp.ClaimTypeConfig
 $newCTConfig.ClaimType = "ClaimTypeValue"
 $newCTConfig.EntityType = [azurecp.DirectoryObjectType]::User
 $newCTConfig.DirectoryObjectProperty = [azurecp.AzureADObjectProperty]::Department
-$claimTypes.Add($newCTConfig)
+$config.ClaimTypes.Add($newCTConfig)
 $config.Update()
 
 # Remove a claim type from the claim types configuration list
