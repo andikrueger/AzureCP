@@ -2,7 +2,7 @@
 
 > **Important:**  
 > Start a **new PowerShell console** to ensure the use of up to date persisted objects, which avoids concurrency update errors.  
-> [Assembly must be updated manually](Install-AzureCP.html) on SharePoint servers that do not run SharePoint service "Microsoft SharePoint Foundation Web Application".  
+> [Assemblies must be updated manually](Install-AzureCP.html) on SharePoint servers that do not run SharePoint service "Microsoft SharePoint Foundation Web Application".  
 > If something goes wrong, [check this page](Fix-setup-issues.html) to fix issues.
 
 - Run Update-SPSolution on the server running central administration:

@@ -30,21 +30,48 @@ $trust.Update()
 
 - Due to limitations of SharePoint API, do not associate AzureCP with more than 1 SPTrustedIdentityTokenIssuer. Developers can [bypass this limitation](For-Developers.html).
 
-- You must manually install azurecp.dll in the GAC of SharePoint servers that do not run SharePoint service "Microsoft SharePoint Foundation Web Application".
+- You must manually install azurecp.dll and all its dependend assemblies in the GAC of SharePoint servers that do not run SharePoint service "Microsoft SharePoint Foundation Web Application".
 
-You can extract azurecp.dll from AzureCP.wsp using [7-zip](https://www.7-zip.org/), and install it in the GAC using this PowerShell script:
+You can extract the assemblies from AzureCP.wsp using [7-zip](https://www.7-zip.org/), and add them to the GAC using this PowerShell script:
 
 ```powershell
+<#
+.SYNOPSIS
+    Check if assemblies in the directory specified are present in the GAC, and add them if not.
+.DESCRIPTION
+    This script needs to be executed each time you install/update AzureCP, on all SharePoint servers that do not run SharePoint service “Microsoft SharePoint Foundation Web Application”.
+    Set $assemblies to the path where AzureCP.wsp was unzipped
+.LINK
+    https://yvand.github.io/AzureCP/Install-AzureCP.html
+#>
+
+$assemblies = Get-ChildItem -Path "C:\AzurecpWSPUnzipped\*.dll"
 [System.Reflection.Assembly]::Load("System.EnterpriseServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
 $publish = New-Object System.EnterpriseServices.Internal.Publish
-
-try
+foreach ($assembly in $assemblies)
 {
-    # Method Publish.GacRemove() removes the assembly from the GAC if it exists (for update scenarios)
-    $existingAssembly = [System.Reflection.Assembly]::Load("AzureCP, Version=1.0.0.0, Culture=neutral, PublicKeyToken=65dc6b5903b51636").Location
-    $publish.GacRemove($existingAssembly)
-} catch {}
+    $filePath = $assembly.FullName
+    $assemblyFullName = [System.Reflection.AssemblyName]::GetAssemblyName($filePath).FullName
 
-# Adds assembly to the GAC
-$publish.GacInstall("F:\Data\Dev\azurecp.dll")
+    try
+    {
+        $assemblyInGAC = [System.Reflection.Assembly]::Load($assemblyFullName)
+        Write-Host "Assembly $assemblyFullName is already present in the GAC"
+
+        if ($assemblyInGAC.FullName -match "AzureCP, Version=1.0.0.0, Culture=neutral, PublicKeyToken=65dc6b5903b51636")
+        {
+            # AzureCP must always be overwritten because each version has the same full name
+            $publish.GacRemove($assemblyInGAC)
+            $publish.GacInstall($filePath)
+            Write-Host "Assembly $assemblyFullName sucessfully re-added to the GAC" -ForegroundColor Green
+        }
+    }
+    catch [System.IO.FileNotFoundException] 
+    {
+        # Assembly.Load throws a FileNotFoundException if assembly is not found in the GAC: https://docs.microsoft.com/en-us/dotnet/api/system.io.filenotfoundexception?view=netframework-4.8
+        Write-Host "Adding assembly $assemblyFullName to the GAC"
+        $publish.GacInstall($filePath)
+        Write-Host "Assembly $assemblyFullName sucessfully added to the GAC" -ForegroundColor Green
+    }
+}
 ```
