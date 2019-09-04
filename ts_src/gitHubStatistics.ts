@@ -14,15 +14,13 @@ namespace GitHubStatistics {
     }
 
     export class RepoStats {
-        url: string = "https://ldapcp-functions.azurewebsites.net/api/GetLatestAzureCPRepoStats";
-        //url: string = "http://jsfiddle.net/echo/jsonp/";
-        authZKey: string = "3YWIoBPB2gMnG4bN5WsTF4p14V3Bx7U7ZXqrRX2SWj13Mn2omw3OnQ==";
+        url: string = "https://github-stats.azurewebsites.net/api/GetLatestDocument";
         getLatestStat() {
             //console.log("Sending query to " + this.url);            
             $.ajax({
                 method: "GET",
                 crossDomain: true,
-                data: {code: this.authZKey},
+                data: {project: "Yvand/AzureCP"},
                 dataType: "jsonp",
                 jsonpCallback: "GitHubStatistics.RepoStats.parseGitHubStatisticsResponse",
                 url: this.url,
