@@ -31,7 +31,7 @@ var GitHubStatistics;
             $("#TotalDownloadCount").text(result.TotalDownloadCount);
             $("#LatestReleaseDownloadCount").text(result.LatestReleaseDownloadCount);
             $("#LatestReleaseTagName").text(result.LatestReleaseTagName);
-            //$("#LatestAssetUrl").attr("href", result.LatestAssetUrl);
+            $("#LatestAssetUrl").attr("href", result.LatestAssetUrl);
             //$("#LatestReleaseCreationDate").text(result.LatestReleaseCreationDate);
         }
         ;
