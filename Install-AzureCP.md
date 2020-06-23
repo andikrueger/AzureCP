@@ -2,7 +2,8 @@
 
 > **Important:**  
 > Start a **new PowerShell console** to ensure the use of up to date persisted objects, which avoids concurrency update errors.  
-> If something goes wrong, [check this page](Fix-setup-issues.html) to fix issues.
+> If something goes wrong, [check this page](Fix-setup-issues.html) to fix issues.  
+> Due to its dependency to [Microsoft.Graph 3+](https://www.nuget.org/packages/Microsoft.Graph), AzureCP 17 (or newer) requires at least [.NET 4.6.1](https://support.microsoft.com/en-us/lifecycle/search?alpha=.net%20framework) (SharePoint requires only .NET 4.5).
 
 - Download AzureCP.wsp.
 - Install and deploy the solution:
