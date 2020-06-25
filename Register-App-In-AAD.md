@@ -1,6 +1,6 @@
 ## Register the application for AzureCP in your Azure Active Directory tenant
 
-AzureCP needs an application in your Azure AD tenant to be allowed to query it.
+AzureCP needs an application in your Azure AD tenant to be allowed to query it.  
 Follow the steps below to create it with the required settings:
 
 - Sign-in to your [Azure Active Directory tenant](https://aad.portal.azure.com/)
