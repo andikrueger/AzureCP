@@ -58,18 +58,16 @@ SELECT Id, Name, cast (properties as xml) AS XMLProps FROM Objects WHERE Name = 
 
 ## Configure proxy for internet access
 
-AzureCP makes HTTP requests to access Azure AD, and may run in all SharePoint processes (w3wp of the site, STS, central administration, and also in owstimer.exe).  
-If SharePoint servers connect to internet through a proxy, additional configuration is required.
+AzureCP may run in all SharePoint processes (w3wp of the site, STS, central administration, and also in owstimer.exe), and requires access to the following endpoints:
 
-### To allow AzureCP to connect to Azure
+* login.windows.net: Used to discover the endpoints to use for the authentication
+* login.microsoftonline.com: Used to authenticate and retrieve the access token
+* graph.microsoft.com: Used to perform the actual graph queries
+* crl.microsoft.com: Used by lsass to validate the CRL of the SSL certificates
 
-If needed, add the [proxy configuration](https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/file-schema/network/defaultproxy-element-network-settings) in the web.config of:
+### Configure the proxy for SharePoint processes
 
-* SharePoint sites that use AzureCP
-* SharePoine central administration site
-* SharePoint STS located in 15\WebServices\SecurityToken
-* SharePoint Web Services root site
-* Also create file owstimer.exe.config in 15\BIN of each SharePoint server to put proxy configuration
+If SharePoint servers connect to internet through a proxy, [additional configuration](https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/file-schema/network/defaultproxy-element-network-settings) is required in the configuration files:
 
 ```xml
 <system.net>
@@ -79,7 +77,16 @@ If needed, add the [proxy configuration](https://docs.microsoft.com/en-us/dotnet
 </system.net>
 ```
 
-### To allow certificate chain validation
+This configuration is required for the following services:
+
+* SharePoint sites that use AzureCP
+* SharePoine central administration site
+* SharePoint STS located in 16\WebServices\SecurityToken
+* SharePoint Web Services root site
+* Also create file owstimer.exe.config in 16\BIN of each SharePoint server to put proxy configuration
+
+
+### Configure the proxy for Windows processes
 
 Connection to Azure AD is secured, and Windows validates all certificates in the chain.  
 If Windows cannot validate them, the usual symptom is a hang during 1 minute upon sign-in, and errors are recorded in CAPI2 event log.  
