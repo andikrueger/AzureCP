@@ -77,13 +77,13 @@ If SharePoint servers connect to internet through a proxy, [additional configura
 </system.net>
 ```
 
-This configuration is required for the following services:
+This configuration is required for the following services, on all SharePoint servers of the farm:
 
 * SharePoint sites that use AzureCP
 * SharePoine central administration site
 * SharePoint STS located in 16\WebServices\SecurityToken
 * SharePoint Web Services root site
-* Also create file owstimer.exe.config in 16\BIN of each SharePoint server to put proxy configuration
+* SharePoint Timer service (if necessary, create file owstimer.exe.config in 16\BIN)
 
 
 ### Configure the proxy for Windows processes
