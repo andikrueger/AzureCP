@@ -13,6 +13,9 @@ docs:
 - title: Configure
   url: Configure-AzureCP.html
 
+- title: Troubleshoot
+  url: Troubleshoot-AzureCP.html
+
 - title: Register application in AAD
   url: Register-App-In-AAD.html
 
