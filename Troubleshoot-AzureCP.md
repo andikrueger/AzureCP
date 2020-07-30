@@ -12,7 +12,7 @@ Alternatively, you may also use [ULSViewer](https://www.microsoft.com/en-us/down
 
 ### Run Graph queries in Postman
 
-A simple way to troubleshoot AzureCP is to run the Microsoft Graph queries outside of SharePoint / AzureCP.
-You may import the Postman collection below to easily run them:
+A simple way to troubleshoot AzureCP is to run the Microsoft Graph queries outside of SharePoint / AzureCP.  
+You may use [Postman](https://www.postman.com/), by importing the collection below:
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/7f2fca601fa9be1d8bb8)
