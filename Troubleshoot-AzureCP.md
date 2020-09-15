@@ -16,3 +16,17 @@ A simple way to troubleshoot AzureCP is to run the Microsoft Graph queries outsi
 You may use [Postman](https://www.postman.com/), by importing the collection below:
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/7f2fca601fa9be1d8bb8)
+
+### Obtain the access token using PowerShell
+
+This PowerShell script requests an access token to Microsoft Graph, as done by AzureCP:
+
+```powershell
+$clientId = "<CLIENTID>"
+$clientSecret = "<CLIENTSECRET>"
+$tenantName = "TENANTNAME.onmicrosoft.com"
+$headers = @{ "Content-Type" = "application/x-www-form-urlencoded" }
+$body = "grant_type=client_credentials&client_id=$clientId&client_secret=$clientSecret&resource=https%3A//graph.microsoft.com/"
+$response = Invoke-RestMethod "https://login.microsoftonline.com/$tenantName/oauth2/token" -Method "POST" -Headers $headers -Body $body
+$response | ConvertTo-Json
+```
