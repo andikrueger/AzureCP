@@ -8,14 +8,24 @@ AzureCP records all its activity in the SharePoint logs, including performance, 
 Merge-SPLogFile -Path "C:\Temp\AzureCP_logging.log" -Overwrite -Area "AzureCP" -StartTime (Get-Date).AddDays(-1)
 ```
 
-Alternatively, you may also use [ULSViewer](https://www.microsoft.com/en-us/download/details.aspx?id=44020) and monitor the logs in real time while you reproduce the issue.
+You may also use [ULSViewer](https://www.microsoft.com/en-us/download/details.aspx?id=44020) to apply the same filter and monitor the logs in real time.
 
 ### Run Graph queries in Postman
 
-A simple way to troubleshoot AzureCP is to run the Microsoft Graph queries outside of SharePoint / AzureCP.  
-You may use [Postman](https://www.postman.com/), by importing the collection below:
+You can import the collection below in [Postman](https://www.postman.com/) to replay the queries sent by AzureCP and understand the results it returns:
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/7f2fca601fa9be1d8bb8)
+
+### Test connectivity with Azure AD
+
+This script connects to the sites required by Microsoft Graph, it can be run on the SharePoint servers to ensure that they can be reached:
+
+```powershell
+Invoke-WebRequest -Uri https://login.windows.net
+Invoke-WebRequest -Uri https://login.microsoftonline.com
+Invoke-WebRequest -Uri https://graph.microsoft.com
+```
+
 
 ### Obtain the access token using PowerShell
 
