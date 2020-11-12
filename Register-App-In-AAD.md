@@ -13,9 +13,9 @@ You may create the application using either the portal or az cli.
     > **Note:** Copy the "Application (client) ID": it is required by AzureCP to add a tenant.
 - Click on "API permissions"
     - Remove the default permission.
-    - Add a permission > Select "Microsoft Graph" > "Application permissions" > Directory: Select "Group.Read.All" and "User.Read.All" and click "Add permissions"
+    - Add a permission > Select "Microsoft Graph" > "Application permissions". Here you can add "Group.Read.All" and "User.Read.All"
     - Click on "Grant admin consent for TenantName" > Yes
-    > **Note:** "After this operation, you should have only permissions "Group.Read.All" and "User.Read.All", of type "Application" and with admin consent granted.
+    > **Note:** "After this operation, you should have only permissions "Group.Read.All" and "User.Read.All", of type "Application", with status "Granted".
 - Click on "Certificates & secrets": AzureCP supports both a certificate or a client secret, choose either option depending on your needs.
 
 ### Create the app registration using az cli
