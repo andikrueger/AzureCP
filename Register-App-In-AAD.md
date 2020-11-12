@@ -1,7 +1,7 @@
 ## Register the application for AzureCP in your Azure Active Directory tenant
 
-A dedicated application needs to be registered in your Azure AD tenant, with application permissions "Group.Read.All" and "User.Read.All", to allow AzureCP to work.  
-You may create the application using either the portal or az cli.
+AzureCP needs its own application in your Azure AD tenant, with permissions "Group.Read.All" and "User.Read.All".  
+This page shows you how to create it, using either the Azure portal or az cli.
 
 ### Create the app registration using the Azure portal
 
