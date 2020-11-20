@@ -64,7 +64,7 @@ Install-SPSolution -Identity $packageName -GACDeployment -Local
 
 > If you run cmdlet `Install-SPSolution` with `-Local`, but not on every SharePoint server that run service "Microsoft SharePoint Foundation Web Application", solution won't be "Globally deployed" and SharePoint won't activate AzureCP features.
 
-- In all cases, for all other SharePoint servers that **do NOT run the service "Microsoft SharePoint Foundation Web Application"**: You must manually add AzureCP DLLs to the GAC of SharePoint servers:
+- In all cases, for all other SharePoint servers that **do NOT run the service "Microsoft SharePoint Foundation Web Application"**: You must manually add AzureCP DLLs to the GAC:
   - Download the package 'AzureCP-XXXX-dependencies.zip' corresponding to your version from the [GitHub releases page](https://github.com/Yvand/AzureCP/releases) (expand the "Assets" to find it)
   - Unzip it in a local directory on the SharePoint server
   - Run the script below to add the DLLs to the GAC:
@@ -75,7 +75,7 @@ Install-SPSolution -Identity $packageName -GACDeployment -Local
     Check if assemblies in the directory specified are present in the GAC, and add them if not.
 .DESCRIPTION
     This script needs to be executed each time you install/update AzureCP, on all SharePoint servers that do not run SharePoint service “Microsoft SharePoint Foundation Web Application”.
-    Set $assemblies to the path where AzureCP.wsp was unzipped
+    Set $assemblies to the path where 'AzureCP-XXXX-dependencies.zip' was unzipped
 .LINK
     https://yvand.github.io/AzureCP/Install-AzureCP.html
 #>
