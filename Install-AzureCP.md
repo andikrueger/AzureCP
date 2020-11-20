@@ -1,39 +1,62 @@
 ## How to install AzureCP
 
 > **Important:**  
-> Start a **new PowerShell console** to ensure the use of up to date persisted objects, which avoids concurrency update errors.  
+> **Always start a new PowerShell console** to ensure using up to date persisted objects, which avoids nasty errors.  
+> AzureCP 17 requires at least .NET 4.6.1 [(released in 2015)](https://docs.microsoft.com/en-us/lifecycle/products/microsoft-net-framework-461).  
+> **AzureCP 18 (or newer) requires at least .NET 4.7.2** [(released in 2018)](https://docs.microsoft.com/en-us/lifecycle/products/microsoft-net-framework-472).  
 > If something goes wrong, [check this page](Fix-setup-issues.html) to fix issues.  
-> Due to its dependency to [Microsoft.Graph 3+](https://www.nuget.org/packages/Microsoft.Graph), AzureCP 17 (or newer) requires at least [.NET 4.6.1](https://support.microsoft.com/en-us/lifecycle/search?alpha=.net%20framework) (SharePoint requires only .NET 4.5).
+
+Follow all the steps below to ensure the correct installation of AzureCP:
 
 - Download AzureCP.wsp.
-- Install and deploy the solution:
+- Install and deploy the solution, using either the "simple" or the "safe" way. In a production environment with multiple servers, the "safe" is highly recommended due to reliability issues in SharePoint (especially 2019) (and especially if there are many servers):
+
+Simple way, recommended for single-server farms only:
 
 ```powershell
-Add-SPSolution -LiteralPath "F:\Data\Dev\AzureCP.wsp"
+Add-SPSolution -LiteralPath "C:\Data\AzureCP.wsp"
+# Wait for some time (until solution is actually added) before running Install-SPSolution
 Install-SPSolution -Identity "AzureCP.wsp" -GACDeployment
 ```
 
-- Associate AzureCP with a SPTrustedIdentityTokenIssuer:
+Safe way, that you need to run on **ALL SharePoint servers which run the service "Microsoft SharePoint Foundation Web Application"**, sequentially (not in parallel), **starting with the one running central administration (even if that one does not run the service)**:
 
 ```powershell
-$trust = Get-SPTrustedIdentityTokenIssuer "SPTRUST NAME"
-$trust.ClaimProviderName = "AzureCP"
-$trust.Update()
+$packageName = "AzureCP.wsp"
+if ($null -eq (Get-SPSolution -Identity $packageName -ErrorAction SilentlyContinue)) {
+    Write-Host "Adding solution $packageName to the farm..."
+    Add-SPSolution -LiteralPath "C:\Data\$packageName"
+}
+
+$count = 0
+while (($count -lt 20) -and ($null -eq $solution))
+{
+    Write-Host "Waiting for the solution $packageName to be available..."
+    Start-Sleep -Seconds 5
+    $solution = Get-SPSolution -Identity $packageName
+    $count++
+}
+
+if ($null -eq $solution) {
+    Write-Error "Solution $packageName could not be found."
+    throw ("Solution $packageName could not be found.")
+}
+
+# Always wait at least 5 seconds to avoid that Install-SPSolution does not actually trigger deployment
+Start-Sleep -Seconds 5
+Write-Host "Deploying solution $packageName to the farm..."
+# If -local is omitted, solution files will be deployed in all servers that run service "Microsoft SharePoint Foundation Web Application", but it may fail due to reliability issues in SharePoint
+Install-SPSolution -Identity $packageName -GACDeployment -Local
 ```
 
-- Visit central administration > System Settings > Manage farm solutions: Wait until solution status shows "Deployed".
-- Update assembly manually on SharePoint servers that do not run the service "Microsoft SharePoint Foundation Web Application" (see below for more details).
-- Restart IIS service and SharePoint timer service on each SharePoint server.
-- [Add an application](Register-App-In-AAD.html) in your Azure AD tenant to allow AzureCP to query it.
-- [Configure](Configure-AzureCP.html) AzureCP for your environment.
+- Visit central administration > System Settings > Manage farm solutions: Confirm the solution is "Globally deployed".
 
-## Important
+> If you run cmdlet `Install-SPSolution` with `-Local`, but not on every SharePoint server that run service "Microsoft SharePoint Foundation Web Application", solution won't be "Globally deployed" and SharePoint won't activate AzureCP features.
 
-- Due to limitations of SharePoint API, do not associate AzureCP with more than 1 SPTrustedIdentityTokenIssuer. Developers can [bypass this limitation](For-Developers.html).
-
-- You must manually install azurecp.dll and all its dependend assemblies in the GAC of SharePoint servers that do not run SharePoint service "Microsoft SharePoint Foundation Web Application".
-
-You can extract the assemblies from AzureCP.wsp using [7-zip](https://www.7-zip.org/), and add them to the GAC using this PowerShell script:
+- In all cases, for all other SharePoint servers that **do NOT run the service "Microsoft SharePoint Foundation Web Application"**: You must manually add AzureCP DLLs to the GAC of SharePoint servers:
+  - Download the package 'AzureCP-XXXX-dependencies.zip' corresponding to your version from the [GitHub releases page](https://github.com/Yvand/AzureCP/releases) (expand the "Assets" to find it)
+  - Unzip it in a local directory on the SharePoint server
+  - Run the script below to add the DLLs to the GAC:
 
 ```powershell
 <#
@@ -46,7 +69,7 @@ You can extract the assemblies from AzureCP.wsp using [7-zip](https://www.7-zip.
     https://yvand.github.io/AzureCP/Install-AzureCP.html
 #>
 
-$assemblies = Get-ChildItem -Path "C:\AzurecpWSPUnzipped\*.dll"
+$assemblies = Get-ChildItem -Path "C:\AzureCP-XXXX-dependencies-unzipped\*.dll"
 [System.Reflection.Assembly]::Load("System.EnterpriseServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
 $publish = New-Object System.EnterpriseServices.Internal.Publish
 foreach ($assembly in $assemblies)
@@ -76,3 +99,20 @@ foreach ($assembly in $assemblies)
     }
 }
 ```
+
+- Associate AzureCP with a SPTrustedIdentityTokenIssuer:
+
+```powershell
+$trust = Get-SPTrustedIdentityTokenIssuer "SPTRUST NAME"
+$trust.ClaimProviderName = "AzureCP"
+$trust.Update()
+```
+
+- Restart IIS service and SharePoint timer service (SPTimerV4) on all SharePoint servers.
+- [Add an application](Register-App-In-AAD.html) in your Azure AD tenant to allow AzureCP to query it.
+- [Configure](Configure-AzureCP.html) AzureCP for your environment.
+
+## Important
+
+- Due to limitations of SharePoint API, do not associate AzureCP with more than 1 SPTrustedIdentityTokenIssuer. Developers can [bypass this limitation](For-Developers.html).
+- You really have to manually add azurecp.dll and all its dependend assemblies in the GAC of SharePoint servers that do not run SharePoint service "Microsoft SharePoint Foundation Web Application".
