@@ -9,9 +9,8 @@
 Follow all the steps below to ensure the correct installation of AzureCP:
 
 - Download AzureCP.wsp.
-- Install and deploy the solution, using either the "simple" or the "safe" way. In a production environment with multiple servers, the "safe" is highly recommended due to reliability issues in SharePoint (especially 2019) (and especially if there are many servers):
-
-Simple way, recommended for single-server farms only:
+- Install and deploy the solution, using either the "simple" or the "safe" way:
+  - Simple way, recommended for single-server farms only:
 
 ```powershell
 Add-SPSolution -LiteralPath "C:\Data\AzureCP.wsp"
@@ -19,9 +18,21 @@ Add-SPSolution -LiteralPath "C:\Data\AzureCP.wsp"
 Install-SPSolution -Identity "AzureCP.wsp" -GACDeployment
 ```
 
-Safe way, that you need to run on **ALL SharePoint servers which run the service "Microsoft SharePoint Foundation Web Application"**, sequentially (not in parallel), **starting with the one running central administration (even if that one does not run the service)**:
+  - Safe way: Highly recommended for production environments with multiple servers:
+
+Run this script on **ALL SharePoint servers which run the service "Microsoft SharePoint Foundation Web Application"**, sequentially (not in parallel), and **start with the one running central administration** (even if that one does not run the service):
 
 ```powershell
+<#
+.SYNOPSIS
+    Deploy "AzureCP.wsp" in a reliable way, to address reliability issues that may occur when deploying solutions in SharePoint (especially 2019) (and especially if there are many servers):
+.DESCRIPTION
+    Run this script on ALL SharePoint servers which run the service "Microsoft SharePoint Foundation Web Application", sequentially (not in parallel), and start with the one running central administration (even if that one does not run the service):
+    Set the correct path in Add-SPSolution cmdlet
+.LINK
+    https://yvand.github.io/AzureCP/Install-AzureCP.html
+#>
+
 $packageName = "AzureCP.wsp"
 if ($null -eq (Get-SPSolution -Identity $packageName -ErrorAction SilentlyContinue)) {
     Write-Host "Adding solution $packageName to the farm..."
