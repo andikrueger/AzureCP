@@ -67,7 +67,7 @@ If SharePoint servers connect to internet through a proxy, [additional configura
 
 ```xml
 <system.net>
-    <defaultProxy useDefaultCredentials="true">
+    <defaultProxy useDefaultCredentials="True">
         <proxy proxyaddress="http://proxy.contoso.com:8888" bypassonlocal="True" />
     </defaultProxy>
 </system.net>
