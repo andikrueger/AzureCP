@@ -50,7 +50,7 @@ $config.ClaimTypes.Remove("ClaimTypeValue")
 $config.Update()
 ```
 
-AzureCP configuration is stored as a persisted object in SharePoint configuration database, and it can be returned with this SQL command:
+AzureCP configuration is stored as a persisted object in the SharePoint configuration database, and can be returned with this SQL command:
 
 ```sql
 SELECT Id, Name, cast (properties as xml) AS XMLProps FROM Objects WHERE Name = 'AzureCPConfig'
@@ -58,12 +58,8 @@ SELECT Id, Name, cast (properties as xml) AS XMLProps FROM Objects WHERE Name = 
 
 ## Configure proxy for internet access
 
-AzureCP may run in all SharePoint processes (w3wp of the site, STS, central administration, and also in owstimer.exe), and requires access to the following endpoints:
-
-* login.windows.net: Used to discover the endpoints to use for the authentication
-* login.microsoftonline.com: Used to authenticate and retrieve the access token
-* graph.microsoft.com: Used to perform the actual graph queries
-* crl.microsoft.com: Used by lsass to validate the CRL of the SSL certificates
+AzureCP may be used by each SharePoint process (w3wp, owstimer) on any server, so they all need to be able to connect to Azure AD, which is comprised of various endpoints that depend on [the region](https://docs.microsoft.com/en-us/azure/active-directory/develop/authentication-national-cloud) of your Azure AD tenant.
+Windows also needs to be able to validate the certificates.
 
 ### Configure the proxy for SharePoint processes
 
@@ -77,14 +73,13 @@ If SharePoint servers connect to internet through a proxy, [additional configura
 </system.net>
 ```
 
-This configuration is required for the following services, on all SharePoint servers of the farm:
+This configuration must be set on the following processes, on all SharePoint servers of the farm:
 
 * SharePoint sites that use AzureCP
 * SharePoine central administration site
 * SharePoint STS located in 16\WebServices\SecurityToken
 * SharePoint Web Services root site
 * SharePoint Timer service (if necessary, create file owstimer.exe.config in 16\BIN)
-
 
 ### Configure the proxy for Windows processes
 

@@ -2,7 +2,7 @@
 
 ### Check SharePoint logs
 
-AzureCP records all its activity in the SharePoint logs, including performance, queries and number of results returned per Azure AD tenant. They can be retrieved by filtering on Product/Area "AzureCP":
+AzureCP records all its activity in the SharePoint logs, including performance, queries and results returned by Azure AD. They can be displayed by filtering on Product/Area "AzureCP", for example:
 
 ```powershell
 Merge-SPLogFile -Path "C:\Temp\AzureCP_logging.log" -Overwrite -Area "AzureCP" -StartTime (Get-Date).AddDays(-1)
@@ -10,15 +10,15 @@ Merge-SPLogFile -Path "C:\Temp\AzureCP_logging.log" -Overwrite -Area "AzureCP" -
 
 You may use [ULSViewer](https://www.microsoft.com/en-us/download/details.aspx?id=44020) to apply this filter and monitor the logs in real time.
 
-### Run Microsoft Graph queries in Postman
+### Test Microsoft Graph queries in Postman
 
-You can import the collection below in [Postman](https://www.postman.com/) to replay the queries sent by AzureCP and understand the results it returns:
+You can import the collection below in [Postman](https://www.postman.com/) to replay the typical queries issued by AzureCP:
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/7f2fca601fa9be1d8bb8)
 
 ### Test connectivity with Azure AD
 
-This PowerShell script connects to all the locations required for Microsoft Graph to work. It may be run on the SharePoint servers to ensure that they can be reached:
+AzureCP may fail to connect to Azure AD for various reasons. The PowerShell script below connects to the typical Azure endpoints and may be run on the SharePoint servers to test the connectivity:
 
 ```powershell
 Invoke-WebRequest -Uri https://login.windows.net

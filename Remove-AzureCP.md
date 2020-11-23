@@ -1,7 +1,7 @@
 ## How to remove AzureCP
 
 > **Important:**  
-> Start a **new PowerShell console** to ensure the use of up to date persisted objects, which avoids concurrency update errors.  
+> **Always start a new PowerShell process** to ensure using up to date persisted objects and avoid nasty errors.  
 > If something goes wrong, [check this page](Fix-setup-issues.html) to fix issues.
 
 ### Step 1: Reset property ClaimProviderName in the SPTrustedIdentityTokenIssuer
