@@ -1,13 +1,16 @@
 ## How to install AzureCP
 
-> **Important:**  
-> **Always start a new PowerShell console** to ensure using up to date persisted objects, which avoids nasty errors.  
+### Important
+
+> **Always start a new PowerShell process** to ensure using up to date persisted objects and avoid nasty errors.  
 > AzureCP 17 requires at least .NET 4.6.1 [(released in 2015)](https://docs.microsoft.com/en-us/lifecycle/products/microsoft-net-framework-461).  
 > **AzureCP 18 (or newer) requires at least .NET 4.7.2** [(released in 2018)](https://docs.microsoft.com/en-us/lifecycle/products/microsoft-net-framework-472).  
 > If something goes wrong, [check this page](Fix-setup-issues.html) to fix issues.  
 
-SharePoint (especially 2019) has unaddressed reliability issues when deploying farm solutions on farms with multiple servers. The more servers the farm has, the bigger the risk that deployment fails. To address this, cmdlet `Install-SPSolution` can be run with `-Local` but it requires more operations.  
-This page will guide you through the steps to install AzureCP in a safe and reliable way, make sure you follow all of them:
+### Installation procedure
+
+SharePoint (especially 2019) has unaddressed reliability issues when deploying farm solutions on farms with multiple servers. The more servers the farm has, the bigger the risk that deployment fails. To mitigate this, cmdlet `Install-SPSolution` can be used with `-Local` but it requires more operations.  
+This page will guide you through the steps to install AzureCP in a safe and reliable way. Make sure to complete all of them:
 
 - Download AzureCP.wsp.
 - Install and deploy the solution, using either the "simple" or the "safe" method:
@@ -39,19 +42,20 @@ $fullpath = "C:\Data\$claimsprovider.wsp"
 $packageName = "$claimsprovider.wsp"
 
 # Perform checks to detect and prevent potential problems
-# Test 1: Install-SPSolution will fail if claims provider is already present on the current server
+# Test 1: Install-SPSolution will fail if claims provider is already installed on the current server
 if ($null -ne (Get-SPClaimProvider -Identity $claimsprovider -ErrorAction SilentlyContinue)) {
     Write-Error "Cannot continue because current server already has claims provider $claimsprovider, which will cause an error when running Install-SPSolution."
     throw ("Cannot continue because current server already has claims provider $claimsprovider, which will cause an error when running Install-SPSolution.")
     Get-SPClaimProvider| ?{$_.DisplayName -like $claimsprovider}| Remove-SPClaimProvider
 }
 
-# Test 2: Install-SPSolution will fail if local server already has a feature that current package wants to install
+# Test 2: Install-SPSolution will fail if any feature in the WSP solution is already installed on the current server
 if ($null -ne (Get-SPFeature| ?{$_.DisplayName -like "$claimsprovider*"})) {
     Write-Error "Cannot continue because current server already has features of $claimsprovider, Visit https://yvand.github.io/AzureCP/Fix-setup-issues.html to fix this."
     throw ("Cannot continue because current server already has features of $claimsprovider, Visit https://yvand.github.io/AzureCP/Fix-setup-issues.html to fix this.")
 }
 
+# Add the solution if it's not already present (only the 1st server will do it)
 if ($null -eq (Get-SPSolution -Identity $packageName -ErrorAction SilentlyContinue)) {
     Write-Host "Adding solution $packageName to the farm..."
     Add-SPSolution -LiteralPath $fullpath
@@ -82,7 +86,7 @@ Install-SPSolution -Identity $packageName -GACDeployment -Local
 
 > If you run cmdlet `Install-SPSolution` with `-Local`, but not on every SharePoint server that run service "Microsoft SharePoint Foundation Web Application", solution won't be "Globally deployed" and SharePoint won't activate AzureCP features.
 
-- For all other SharePoint servers that **do NOT run the service "Microsoft SharePoint Foundation Web Application"**, you must manually add AzureCP DLLs to their GAC. Complete the steps below for each:
+- For all other SharePoint servers that **do NOT run the service "Microsoft SharePoint Foundation Web Application"**, you must manually add AzureCP DLLs to their GAC. Complete the steps below on each of those servers to do so:
   - Download the package 'AzureCP-XXXX-dependencies.zip' corresponding to your version from the [GitHub releases page](https://github.com/Yvand/AzureCP/releases) (expand the "Assets" to find it)
   - Unzip it in a local directory
   - Run the script below to add the DLLs to the GAC:
@@ -144,4 +148,4 @@ $trust.Update()
 ## Important
 
 - Due to limitations of SharePoint API, do not associate AzureCP with more than 1 SPTrustedIdentityTokenIssuer. Developers can [bypass this limitation](For-Developers.html).
-- You really have to manually add azurecp.dll and all its dependend assemblies in the GAC of SharePoint servers that do not run SharePoint service "Microsoft SharePoint Foundation Web Application".
+- You really have to manually add azurecp.dll and all its dependent assemblies in the GAC of SharePoint servers that do not run SharePoint service "Microsoft SharePoint Foundation Web Application".
