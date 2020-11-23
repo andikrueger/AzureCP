@@ -4,7 +4,7 @@
 
 > **Always start a new PowerShell process** to ensure using up to date persisted objects and avoid nasty errors.  
 > AzureCP 17 requires at least .NET 4.6.1 [(released in 2015)](https://docs.microsoft.com/en-us/lifecycle/products/microsoft-net-framework-461).  
-> **AzureCP 18 (or newer) requires at least .NET 4.7.2** [(released in 2018)](https://docs.microsoft.com/en-us/lifecycle/products/microsoft-net-framework-472).  
+> AzureCP 18 (or newer) requires at least **.NET 4.7.2** [(released in 2018)](https://docs.microsoft.com/en-us/lifecycle/products/microsoft-net-framework-472).  
 > If something goes wrong, [check this page](Fix-setup-issues.html) to fix issues.  
 
 ### Installation procedure
@@ -145,7 +145,7 @@ $trust.Update()
 - [Add an application](Register-App-In-AAD.html) in your Azure AD tenant to allow AzureCP to query it.
 - [Configure](Configure-AzureCP.html) AzureCP for your environment.
 
-## Important
+### Other things to know
 
 - Due to limitations of SharePoint API, do not associate AzureCP with more than 1 SPTrustedIdentityTokenIssuer. Developers can [bypass this limitation](For-Developers.html).
 - You really have to manually add azurecp.dll and all its dependent assemblies in the GAC of SharePoint servers that do not run SharePoint service "Microsoft SharePoint Foundation Web Application".
