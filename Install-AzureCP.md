@@ -6,37 +6,55 @@
 > **AzureCP 18 (or newer) requires at least .NET 4.7.2** [(released in 2018)](https://docs.microsoft.com/en-us/lifecycle/products/microsoft-net-framework-472).  
 > If something goes wrong, [check this page](Fix-setup-issues.html) to fix issues.  
 
-Follow all the steps below to ensure the correct installation of AzureCP:
+SharePoint (especially 2019) has unaddressed reliability issues when deploying farm solutions on farms with multiple servers. The more servers the farm has, the bigger the risk that deployment fails. To address this, cmdlet `Install-SPSolution` can be run with `-Local` but it requires more operations.  
+This page will guide you through the steps to install AzureCP in a safe and reliable way, make sure you follow all of them:
 
 - Download AzureCP.wsp.
-- Install and deploy the solution, using either the "simple" or the "safe" way:
-  - Simple way, recommended for single-server farms only:
+- Install and deploy the solution, using either the "simple" or the "safe" method:
+  - Simple method: Recommended for single-server farms only:
 
 ```powershell
+# Run this script on the server running central administration, in a new PowerShell process
 Add-SPSolution -LiteralPath "C:\Data\AzureCP.wsp"
-# Wait for some time (until solution is actually added) before running Install-SPSolution
+# Wait for some time (until solution is actually added)
+# Then run Install-SPSolution (without -Local) to deploy solution globally (on all servers that run service "Microsoft SharePoint Foundation Web Application"):
 Install-SPSolution -Identity "AzureCP.wsp" -GACDeployment
 ```
 
-  - Safe way: Highly recommended for production environments with multiple servers:
-
-Run this script on **ALL SharePoint servers which run the service "Microsoft SharePoint Foundation Web Application"**, sequentially (not in parallel), and **start with the one running central administration** (even if that one does not run the service):
+  - Safe method: Recommended for production environments with multiple servers:
 
 ```powershell
 <#
 .SYNOPSIS
     Deploy "AzureCP.wsp" in a reliable way, to address reliability issues that may occur when deploying solutions in SharePoint (especially 2019) (and especially if there are many servers):
 .DESCRIPTION
-    Run this script on ALL SharePoint servers which run the service "Microsoft SharePoint Foundation Web Application", sequentially (not in parallel), and start with the one running central administration (even if that one does not run the service):
-    Set the correct path in Add-SPSolution cmdlet
+    Run this script on ALL SharePoint servers which run the service "Microsoft SharePoint Foundation Web Application", sequentially (not in parallel), starting with the one running central administration (even if it does not run the service):
 .LINK
     https://yvand.github.io/AzureCP/Install-AzureCP.html
 #>
 
-$packageName = "AzureCP.wsp"
+# To use this script, you only need to edit the $fullpath variable below
+$claimsprovider = "AzureCP"
+$fullpath = "C:\Data\$claimsprovider.wsp"
+$packageName = "$claimsprovider.wsp"
+
+# Perform checks to detect and prevent potential problems
+# Test 1: Install-SPSolution will fail if claims provider is already present on the current server
+if ($null -ne (Get-SPClaimProvider -Identity $claimsprovider -ErrorAction SilentlyContinue)) {
+    Write-Error "Cannot continue because current server already has claims provider $claimsprovider, which will cause an error when running Install-SPSolution."
+    throw ("Cannot continue because current server already has claims provider $claimsprovider, which will cause an error when running Install-SPSolution.")
+    Get-SPClaimProvider| ?{$_.DisplayName -like $claimsprovider}| Remove-SPClaimProvider
+}
+
+# Test 2: Install-SPSolution will fail if local server already has a feature that current package wants to install
+if ($null -ne (Get-SPFeature| ?{$_.DisplayName -like "$claimsprovider*"})) {
+    Write-Error "Cannot continue because current server already has features of $claimsprovider, Visit https://yvand.github.io/AzureCP/Fix-setup-issues.html to fix this."
+    throw ("Cannot continue because current server already has features of $claimsprovider, Visit https://yvand.github.io/AzureCP/Fix-setup-issues.html to fix this.")
+}
+
 if ($null -eq (Get-SPSolution -Identity $packageName -ErrorAction SilentlyContinue)) {
     Write-Host "Adding solution $packageName to the farm..."
-    Add-SPSolution -LiteralPath "C:\Data\$packageName"
+    Add-SPSolution -LiteralPath $fullpath
 }
 
 $count = 0
@@ -64,9 +82,9 @@ Install-SPSolution -Identity $packageName -GACDeployment -Local
 
 > If you run cmdlet `Install-SPSolution` with `-Local`, but not on every SharePoint server that run service "Microsoft SharePoint Foundation Web Application", solution won't be "Globally deployed" and SharePoint won't activate AzureCP features.
 
-- In all cases, for all other SharePoint servers that **do NOT run the service "Microsoft SharePoint Foundation Web Application"**: You must manually add AzureCP DLLs to the GAC:
+- For all other SharePoint servers that **do NOT run the service "Microsoft SharePoint Foundation Web Application"**, you must manually add AzureCP DLLs to their GAC. Complete the steps below for each:
   - Download the package 'AzureCP-XXXX-dependencies.zip' corresponding to your version from the [GitHub releases page](https://github.com/Yvand/AzureCP/releases) (expand the "Assets" to find it)
-  - Unzip it in a local directory on the SharePoint server
+  - Unzip it in a local directory
   - Run the script below to add the DLLs to the GAC:
 
 ```powershell
