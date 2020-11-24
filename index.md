@@ -1,4 +1,4 @@
-This claims provider uses [Microsoft Graph](https://developer.microsoft.com/en-us/graph/) to connect SharePoint 2019 / 2016 / 2013 with Azure Active Directory and enhance people picker with a great search experience.  
+This claims provider uses [Microsoft Graph](https://developer.microsoft.com/en-us/graph/) to connect SharePoint 2019 / 2016 / 2013 with Azure Active Directory and offer a great search experience in the people picker.  
 ![People picker with AzureCP](https://github.com/Yvand/AzureCP/raw/gh-pages/assets/people%20picker%20AzureCP_2.png)
 
 [This article](https://docs.microsoft.com/en-us/azure/active-directory/saas-apps/sharepoint-on-premises-tutorial) explains how to federate SharePoint with Azure AD.
@@ -16,5 +16,5 @@ This claims provider uses [Microsoft Graph](https://developer.microsoft.com/en-u
 - Configure the list of claim types, their mapping with Azure AD users and groups, and many other settings.
 - Enable/disable augmentation.
 - Enable/disable connection to Azure AD, to keep AzureCP running with limited functionality if connectivity with Azure AD is lost.
-- Customize display of results in the people picker.
+- Customize the display of the results in the people picker.
 - Developers can deeply customize AzureCP to meet specific needs.

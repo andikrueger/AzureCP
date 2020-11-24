@@ -21,9 +21,9 @@ You can import the collection below in [Postman](https://www.postman.com/) to re
 AzureCP may fail to connect to Azure AD for various reasons. The PowerShell script below connects to the typical Azure endpoints and may be run on the SharePoint servers to test the connectivity:
 
 ```powershell
-Invoke-WebRequest -Uri https://login.windows.net
-Invoke-WebRequest -Uri https://login.microsoftonline.com
-Invoke-WebRequest -Uri https://graph.microsoft.com
+Invoke-WebRequest -Uri https://login.windows.net -UseBasicParsing
+Invoke-WebRequest -Uri https://login.microsoftonline.com -UseBasicParsing
+Invoke-WebRequest -Uri https://graph.microsoft.com -UseBasicParsing
 ```
 
 ### Obtain the access token using PowerShell
