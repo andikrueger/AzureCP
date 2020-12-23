@@ -4,7 +4,7 @@
 
 > **Always start a new PowerShell process** to ensure using up to date persisted objects and avoid nasty errors.  
 > AzureCP 17 requires at least .NET 4.6.1 [(released in 2015)](https://docs.microsoft.com/en-us/lifecycle/products/microsoft-net-framework-461).  
-> AzureCP 18 (or newer) requires at least **.NET 4.7.2** [(released in 2018)](https://docs.microsoft.com/en-us/lifecycle/products/microsoft-net-framework-472).  
+> AzureCP 18 (or newer) requires at least **.NET 4.7.2** [(released in 2018)](https://docs.microsoft.com/en-us/lifecycle/products/microsoft-net-framework-472) to fix issues when referencing .NET Standard 2.0 libraries (more details [here](https://docs.microsoft.com/en-us/dotnet/standard/library-guidance/cross-platform-targeting) and [there](https://docs.microsoft.com/en-us/dotnet/standard/net-standard)).  
 > If something goes wrong, [check this page](Fix-setup-issues.html) to fix issues.  
 
 ### Installation procedure
