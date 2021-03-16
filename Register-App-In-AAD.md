@@ -22,6 +22,8 @@ This page shows you how to create it, using either the Azure portal or az cli.
 
 Run this script to create the application, set the permissions, and return its client ID and client secret:
 
+> This script does not work in Azure cloud shell due to various issues, such as [this one](https://github.com/Azure/azure-cli/issues/8912).
+
 ```shell
 # Sign-in to Azure AD tenant. Use --allow-no-subscriptions only if it doesn't have a subscription
 az login --allow-no-subscriptions
