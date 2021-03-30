@@ -39,3 +39,16 @@ $body = "grant_type=client_credentials&client_id=$clientId&client_secret=$client
 $response = Invoke-RestMethod "https://login.microsoftonline.com/$tenantName/oauth2/token" -Method "POST" -Headers $headers -Body $body
 $response | ConvertTo-Json
 ```
+
+### Inspect the actual traffic between AzureCP and Azure AD
+
+You can redirect the traffic between AzureCP and Azure AD through Fiddler to inspect it.
+Once Fiddler was installed locally and its root certificate trusted, you can do it per web application by updating the web.config:
+
+```xml
+<system.net>
+    <defaultProxy useDefaultCredentials="True">
+        <proxy proxyaddress="http://localhost:8888" bypassonlocal="False" />
+    </defaultProxy>
+</system.net>
+```
