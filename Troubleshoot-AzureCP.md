@@ -1,3 +1,8 @@
+---
+title: How to troubleshoot AzureCP
+redirect_to: https://azurecp.yvand.net/docs/help/troubleshooting/
+---
+
 ## Troubleshoot AzureCP
 
 ### Check SharePoint logs

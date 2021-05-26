@@ -1,3 +1,8 @@
+---
+title: Configure AzureCP with administration pages
+redirect_to: https://azurecp.yvand.net/docs/usage/configuration/
+---
+
 ## Configure AzureCP with administration pages
 
 AzureCP comes with 2 pages, provisioned in central administration > Security:

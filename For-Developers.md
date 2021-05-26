@@ -1,3 +1,8 @@
+---
+title: AzureCP for developers
+redirect_to: https://azurecp.yvand.net/docs/usage/for-developers/
+---
+
 ## For developers
 
 Project has evolved a lot since it started, and now most of the customizations can be made out of the box. You may want to customize AzureCP to:

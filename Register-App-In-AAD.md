@@ -1,3 +1,8 @@
+---
+title: Register the application for AzureCP in your Azure Active Directory tenant
+redirect_to: https://azurecp.yvand.net/docs/usage/register-application/
+---
+
 ## Register the application for AzureCP in your Azure Active Directory tenant
 
 AzureCP needs its own application in your Azure AD tenant, with permissions "Group.Read.All" and "User.Read.All".  

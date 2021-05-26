@@ -1,3 +1,8 @@
+---
+title: How to install AzureCP
+redirect_to: https://azurecp.yvand.net/docs/usage/install/
+---
+
 ## How to install AzureCP
 
 ### Important

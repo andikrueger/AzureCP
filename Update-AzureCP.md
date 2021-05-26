@@ -1,3 +1,8 @@
+---
+title: How to update AzureCP
+redirect_to: https://azurecp.yvand.net/docs/usage/update/
+---
+
 ## How to update AzureCP
 
 > **Important:**  

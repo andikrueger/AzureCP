@@ -1,3 +1,8 @@
+---
+title: Fix Setup Issues with AzureCP
+redirect_to: https://azurecp.yvand.net/docs/help/fix-setup-issues/
+---
+
 ## Fix setup issues
 
 Unfortunately, SharePoint has unaddressed reliability issues that causes errors when performing install/uninstall/update operations on farm solutions.  

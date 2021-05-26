@@ -1,3 +1,8 @@
+---
+title: How to remove AzureCP
+redirect_to: https://azurecp.yvand.net/docs/usage/remove/
+---
+
 ## How to remove AzureCP
 
 > **Important:**  

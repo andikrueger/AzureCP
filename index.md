@@ -1,3 +1,8 @@
+---
+title: AzureCP for developers
+redirect_to: https://azurecp.yvand.net/
+---
+
 This claims provider uses [Microsoft Graph](https://developer.microsoft.com/en-us/graph/) to connect SharePoint 2019 / 2016 / 2013 with Azure Active Directory and offer a great search experience in the people picker.  
 ![People picker with AzureCP](https://github.com/Yvand/AzureCP/raw/gh-pages/assets/people%20picker%20AzureCP_2.png)
 
